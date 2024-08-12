@@ -1,0 +1,42 @@
+name: Daily Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-script:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - uses: DeterminateSystems/flake-checker-action@main
+
+    - name: Update package
+      run: ./update.sh
+
+    - name: Check for changes
+      id: check_changes
+      run: |
+        if git diff --exit-code; then
+          echo "changes=none" >> $GITHUB_OUTPUT
+        else
+          echo "changes=detected" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Update flake
+      if: steps.check_changes.outputs.changes == 'detected'
+      run: nix flake update
+
+    - name: Check for changes
+      if: steps.check_changes.outputs.changes == 'detected'
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git commit -a -m "Update package to $(nix eval --raw .#packages.x86_64-linux.default.version)"
+        git push origin master
