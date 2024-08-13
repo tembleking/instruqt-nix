@@ -11,29 +11,32 @@
         "aarch64-darwin"
       ];
 
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-
-      pkgsFor = forAllSystems (
-        system:
-        import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = [ self.overlays.default ];
-        }
-      );
+      forAllSystems =
+        f:
+        nixpkgs.lib.genAttrs supportedSystems (
+          system:
+          let
+            pkgs = import nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+              overlays = [ self.overlays.default ];
+            };
+          in
+          f pkgs
+        );
     in
     {
-      overlays.default = final: prev: {
-        instruqt = (pkgsFor.${final.system}).callPackage ./package.nix { };
-      };
+      overlays.default = final: prev: { instruqt = final.pkgs.callPackage ./package.nix { }; };
 
-      packages = forAllSystems (system: rec {
-        inherit (pkgsFor.${system}) instruqt;
-        default = instruqt;
-      });
+      packages = forAllSystems (
+        pkgs: with pkgs; {
+          inherit instruqt;
+          default = instruqt;
+        }
+      );
 
       checks = forAllSystems (
-        system: with pkgsFor.${system}; {
+        pkgs: with pkgs; {
           inherit instruqt;
           test = stdenv.mkDerivation {
             name = "instruqt can be executed and is the correct version";
@@ -48,6 +51,6 @@
         }
       );
 
-      formatter = forAllSystems (system: (pkgsFor.${system}.nixfmt-rfc-style));
+      formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }
