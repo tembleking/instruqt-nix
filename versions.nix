@@ -1,18 +1,18 @@
 {
-  version = "2288-adfc759";
+  version = "2307-66d4da4";
 
   x86_64-linux = {
-    url = "https://github.com/instruqt/cli/releases/download/2288-adfc759/instruqt-linux.zip";
-    hash = "sha256-16ux/dUSggpXjkPLB2YE50t7+Jy9q+xYxk9iNys1SNk=";
+    url = "https://github.com/instruqt/cli/releases/download/2307-66d4da4/instruqt-linux.zip";
+    hash = "sha256-8qPrh9VwGC8ERZDuMsmjf26CcaJIQdQ/GskJD/Xn118=";
   };
 
   x86_64-darwin = {
-    url = "https://github.com/instruqt/cli/releases/download/2288-adfc759/instruqt-darwin-amd64.zip";
-    hash = "sha256-fqqP3QAaBIhh03Vk7cMLiGZEcnJzDqUqlznKEf6i4MQ=";
+    url = "https://github.com/instruqt/cli/releases/download/2307-66d4da4/instruqt-darwin-amd64.zip";
+    hash = "sha256-bCslL06pe+UZIw7rRJ02PlBO7cxlIjFptIvUjnU9oJg=";
   };
 
   aarch64-darwin = {
-    url = "https://github.com/instruqt/cli/releases/download/2288-adfc759/instruqt-darwin-arm64.zip";
-    hash = "sha256-yzziIzfn4rpqOCoq1bj0K3+tbflgXjJGwNS5uUsI/MM=";
+    url = "https://github.com/instruqt/cli/releases/download/2307-66d4da4/instruqt-darwin-arm64.zip";
+    hash = "sha256-7SSxuSmi4POpiUwJZ7CuPTAtuZJUfq21cgzXPJhIFRU=";
   };
 }
